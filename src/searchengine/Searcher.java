@@ -71,7 +71,7 @@ public class Searcher {
                     current = start;
                     current.urlLink = new UrlList(url, null); // start list of urls(UrlList) by the "name"
                 }else{ // if we already have a list of words
-                    word = Searcher.updateURL(start,name); // Running through all words and compare to url
+                    word = Searcher.updateURL(start,name); // Running through words and compare to url
                     if(word==null){
                        tmp = new HTMLlist(name, null, null);
                        current.next = tmp;
