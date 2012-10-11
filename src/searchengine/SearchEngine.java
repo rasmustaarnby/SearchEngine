@@ -44,7 +44,7 @@ public class SearchEngine {
             name = inuser.readLine(); // Read a line from the terminal
             
             // Advanced Task 1
-            if(name.matches(".*\\ and \\b.*")){
+            if(name.matches(".*\\band\\b.*")){
                 StringTokenizer tokenAnd = new StringTokenizer(name, " and ");
                 while(tokenAnd.hasMoreTokens()){
                 try{
@@ -64,17 +64,20 @@ public class SearchEngine {
                 }
                 }
                 System.out.println("\nYou're using AND\n");
-            }else if(name.matches(".*\\ or \\b.*")){
-                StringTokenizer tokenOr = new StringTokenizer(name, " or ");
-                while(tokenOr.hasMoreTokens()){
-                    //System.out.println(tokenAnd.nextToken()); // prints the tokens (words)
-                    name = tokenOr.nextToken(); // Go through the words
-                    if (Searcher.exists(file,name)) {
-                        HTMLlist result = Searcher.updateURL(file, name);
-                        System.out.println ("\nThe word " + name + " has been found, in the following urls:");
+            }else if(name.matches(".*\\bor\\b.*")){
+                // StringTokenizer tokenOr = new StringTokenizer(name, "or"); // splits the word incorrectly
+                // while(tokenOr.hasMoreTokens()){
+                String[] wordArray = name.split("or");
+                for(String word: wordArray){
+                    String wordWithNoSpace = word.replaceAll("\\s","");
+                    //System.out.println(tokenOr.nextToken()); // prints the tokens (words)
+                    //name = tokenOr.nextToken(); // Go through the words
+                    if (Searcher.exists(file,wordWithNoSpace)) {
+                        HTMLlist result = Searcher.updateURL(file, wordWithNoSpace);
+                        System.out.println ("\nThe word " + wordWithNoSpace + " has been found, in the following urls:");
                         Searcher.print(result);
                     } else {
-                        System.out.println ("\nThe word " + name + " has NOT been found.");
+                        System.out.println ("\nThe word " + wordWithNoSpace + " has NOT been found.");
                     }
                 }
                 System.out.println("\nYou're using OR\n");
@@ -83,7 +86,7 @@ public class SearchEngine {
                     quit = true;
                 } else if (Searcher.exists(file, name)) {
                     HTMLlist result = Searcher.updateURL(file, name);
-                    System.out.println ("The word \""+name+"\" has been found, in the following urls:");
+                    System.out.println ("\nThe word " + name + " has been found, in the following urls:");
                     Searcher.print(result);
                 } else {
                     System.out.println ("The exact word " + name + " has NOT been found.");
@@ -91,7 +94,7 @@ public class SearchEngine {
                     
                     HTMLlist result = Searcher.contains(file, name);
                     if(result != null){
-                        System.out.println("But we found a word that was pretty close to, here are the urls");
+                        System.out.println("\nBut we found a word that was pretty close to, here are the urls");
                         Searcher.print(result); // might return a NullPointerException
                     }
                 }

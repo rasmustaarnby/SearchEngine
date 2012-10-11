@@ -16,7 +16,7 @@ public class Searcher {
 
     public static boolean exists (HTMLlist file, String word) {
         while (file != null) {
-            if (file.str.equals (word)) {
+            if (file.str.equalsIgnoreCase(word)) {
                 return true;
             }
             file = file.next;
@@ -26,7 +26,7 @@ public class Searcher {
     
     public static HTMLlist updateURL(HTMLlist url, String word){
         while(url != null){
-            if(url.str.equals(word)){
+            if(url.str.equalsIgnoreCase(word)){
                 return url;
             }
             url = url.next;
@@ -35,16 +35,16 @@ public class Searcher {
     }
     
     public static void print(HTMLlist file) {
-        UrlList k = file.urlLink; 
-        while(k!= null){ 
-            System.out.println(k.url);
-            k=k.UrlNext;
+        UrlList url = file.urlLink; 
+        while(url!= null){ 
+            System.out.println(url.url);
+            url=url.UrlNext;
         }   
     }
     
     public static HTMLlist contains(HTMLlist url, String word){
         while(url != null){
-            if(url.str.contains(word)){ // would be nice if you could return the word as well
+            if(url.str.contains(word)){ // would be nice if you could return the url as well
                 return url;
             }
             url = url.next;
@@ -53,39 +53,46 @@ public class Searcher {
     }
     
     public static HTMLlist readHtmlList (String filename) throws IOException {
-        String name;
-        HTMLlist start = null, current = null, tmp, word;
-        String url = null;
+        String word;
+        HTMLlist start = null, current = null, tmp, urlObj;
+        String urlString = null;
 
         // Open the file given as argument
         BufferedReader infile = new BufferedReader(new FileReader(filename));
-        name = infile.readLine(); //Read the first line
+        word = infile.readLine(); //Read the first line
         
-        while (name != null) { // Exit if there is nothing
-            if (name.charAt(0) == '*'){ // url found
-                url = name.substring(6); // the substring removes *PAGE:
-                // System.out.println(url); // prints all urls 
-            }else{ // we read a word from the file
-                if(start == null){  
-                    start = new HTMLlist(name, null, null); // start list of word
+        while (word != null) { // Exit if there is nothing
+            if (word.charAt(0) == '*'){ // urlString found
+                urlString = word.substring(6); // the substring removes *PAGE:
+                // System.out.println(urlString); // prints all urls 
+            }else{ // we read a urlObj from the file
+                if(start == null){ 
+                    start = new HTMLlist(word, null, null); // create new list from word
                     current = start;
-                    current.urlLink = new UrlList(url, null); // start list of urls(UrlList) by the "name"
-                }else{ // if we already have a list of words
-                    word = Searcher.updateURL(start,name); // Running through words and compare to url
-                    if(word==null){
-                       tmp = new HTMLlist(name, null, null);
+                    current.urlLink = new UrlList(urlString, null); // create new list of url containing the word
+                    // Searcher.print(start); // prints urlObj (urls)
+                }else{ // if we already have a list of the word
+                    urlObj = Searcher.updateURL(start,word); // compare word to urlObj
+//                    if(urlObj != null){
+//                        Searcher.print(urlObj); // prints urls 
+//                        System.out.println(word); // prints words 
+//                    }
+                    if(urlObj==null){ // if word doesn't exist under any url, create new
+                       tmp = new HTMLlist(word, null, null);
+                       // System.out.println(word); // prints all words 
                        current.next = tmp;
                        current = tmp; // Update the linked list
-                       current.urlLink = new UrlList(url,null); // start list of urls(UrlList)
-                    }else{
-                        if(!word.urlLink.url.equals(url)){ // check if url is already in the UrlList 
-                            UrlList newUrl = new UrlList(url,word.urlLink);// add url to the UrlList
-                            word.urlLink = newUrl; 
+                       current.urlLink = new UrlList(urlString,null); 
+                       // Searcher.print(current); // prints urls several times
+                    }else{ // add word to the correct url
+                        if(!urlObj.urlLink.url.equals(urlString)){ // check if urlObj is already in the UrlList 
+                            UrlList newUrl = new UrlList(urlString,urlObj.urlLink);// add urlObj to the UrlList
+                            urlObj.urlLink = newUrl; 
                         }
                     }
                 }
             }
-            name = infile.readLine(); // Read the next line 
+            word = infile.readLine(); // Read the next line 
         }
         infile.close(); // Close the file
         return start;
