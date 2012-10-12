@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package searchengine;
 
 import java.io.BufferedReader;
@@ -44,7 +40,7 @@ public class Searcher {
     
     public static HTMLlist contains(HTMLlist url, String word){
         while(url != null){
-            if(url.str.contains(word)){ // would be nice if you could return the url as well
+            if(url.str.contains(word)){ // would be nice if you could return the word as well
                 return url;
             }
             url = url.next;

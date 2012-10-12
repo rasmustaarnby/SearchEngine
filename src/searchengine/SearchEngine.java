@@ -1,6 +1,7 @@
 /* SearchCmd.java
    Written by Rune Hansen
    Updated by Alexandre Buisse <abui@itu.dk>
+   Updated by Rasmus Taarnby <reta@itu.dk>
 */
 package searchengine;
 
@@ -21,7 +22,7 @@ public class SearchEngine {
      */
     
     public static void main (String[] args) throws IOException {
-        String name, nameSecond;
+        String word, wordSecond;
         args = new String[1];
         args[0] = "small.txt";
         
@@ -33,7 +34,7 @@ public class SearchEngine {
         
         HTMLlist file = Searcher.readHtmlList (args[0]);
         
-        // Ask for a word to search
+        // Ask for a singleWord to search
         BufferedReader inuser =
             new BufferedReader (new InputStreamReader (System.in));
 
@@ -41,37 +42,32 @@ public class SearchEngine {
         boolean quit = false;
         while (!quit) {
             System.out.print ("Search for: ");
-            name = inuser.readLine(); // Read a line from the terminal
+            word = inuser.readLine(); // Read a line from the terminal
             
-            // Advanced Task 1
-            if(name.matches(".*\\band\\b.*")){
-                StringTokenizer tokenAnd = new StringTokenizer(name, " and ");
+            // Advanced Task
+            if(word.matches(".*\\band\\b.*")){
+                StringTokenizer tokenAnd = new StringTokenizer(word, " and ");
                 while(tokenAnd.hasMoreTokens()){
                 try{
-                    //System.out.println(tokenAnd.nextToken()); // prints the tokens (words)
-                    name = tokenAnd.nextToken(); // Go to first word
-                    nameSecond = name; // Set the first word as second 
-                    name = tokenAnd.nextToken(); // Go to the next word and set it as name
-                    if (Searcher.exists(file,name) && Searcher.exists(file,nameSecond)) { // can we maybe use a for loop or an arraylist to feed several words to look for? 
-                        HTMLlist result = Searcher.updateURL(file, name);
-                        System.out.println ("\nThe combination " + nameSecond + " and " + name + " has been found, in the following urls:");
+                    word = tokenAnd.nextToken(); // Go to first singleWord
+                    wordSecond = word; // Set the first singleWord as second 
+                    word = tokenAnd.nextToken(); // Go to the next singleWord and set it as word
+                    if (Searcher.exists(file,word) && Searcher.exists(file,wordSecond)) { // can we maybe use a for loop or an arraylist to feed several words to look for? 
+                        HTMLlist result = Searcher.updateURL(file, word);
+                        System.out.println ("\nThe combination " + wordSecond + " and " + word + " has been found, in the following urls:");
                         Searcher.print(result);
                     } else {
-                        System.out.println ("\nThe combination " + nameSecond + " and " + name + " has NOT been found.");
+                        System.out.println ("\nThe combination " + wordSecond + " and " + word + " has NOT been found.");
                     }
                 }catch(NoSuchElementException e){
-                    System.out.println("The searchengine only supports two words at the time."); // Is there a way to get the last unused word and display it?
+                    System.out.println("The searchengine only supports two words at the time."); // Is there a way to get the last unused singleWord and display it?
                 }
                 }
                 System.out.println("\nYou're using AND\n");
-            }else if(name.matches(".*\\bor\\b.*")){
-                // StringTokenizer tokenOr = new StringTokenizer(name, "or"); // splits the word incorrectly
-                // while(tokenOr.hasMoreTokens()){
-                String[] wordArray = name.split("or");
-                for(String word: wordArray){
-                    String wordWithNoSpace = word.replaceAll("\\s","");
-                    //System.out.println(tokenOr.nextToken()); // prints the tokens (words)
-                    //name = tokenOr.nextToken(); // Go through the words
+            }else if(word.matches(".*\\bor\\b.*")){
+                String[] wordArray = word.split("or");
+                for(String singleWord: wordArray){
+                    String wordWithNoSpace = singleWord.replaceAll("\\s","");
                     if (Searcher.exists(file,wordWithNoSpace)) {
                         HTMLlist result = Searcher.updateURL(file, wordWithNoSpace);
                         System.out.println ("\nThe word " + wordWithNoSpace + " has been found, in the following urls:");
@@ -82,17 +78,17 @@ public class SearchEngine {
                 }
                 System.out.println("\nYou're using OR\n");
             }else{
-                if (name == null || name.length() == 0) {
+                if (word == null || word.length() == 0) {
                     quit = true;
-                } else if (Searcher.exists(file, name)) {
-                    HTMLlist result = Searcher.updateURL(file, name);
-                    System.out.println ("\nThe word " + name + " has been found, in the following urls:");
+                } else if (Searcher.exists(file, word)) {
+                    HTMLlist result = Searcher.updateURL(file, word);
+                    System.out.println ("\nThe word " + word + " has been found, in the following urls:");
                     Searcher.print(result);
                 } else {
-                    System.out.println ("The exact word " + name + " has NOT been found.");
+                    System.out.println ("The exact word " + word + " has NOT been found.");
                     
                     
-                    HTMLlist result = Searcher.contains(file, name);
+                    HTMLlist result = Searcher.contains(file, word);
                     if(result != null){
                         System.out.println("\nBut we found a word that was pretty close to, here are the urls");
                         Searcher.print(result); // might return a NullPointerException
