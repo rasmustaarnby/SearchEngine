@@ -42,6 +42,19 @@ public class Searcher {
         return returnUrlList;
     }
     
+    public static String compileString(HTMLlist file) {
+        String urls = "";
+        String msg;
+        
+        UrlList url = file.urlLink; 
+        while(url!= null){ 
+            urls = urls + url.url + "\n";
+            url=url.UrlNext;
+        }
+        msg = urls;
+        return msg;
+    }
+    
     public static HTMLlist contains(HTMLlist url, String word){
         while(url != null){
             if(url.str.contains(word)){ // would be nice if you could return the word as well
@@ -50,24 +63,6 @@ public class Searcher {
             url = url.next;
         }
         return null;
-    }
-    
-    
-    public static void toArray(ArrayList list){
-        for(Object url: list){
-            System.out.println(url);
-        }
-            String sQueue = "";   
-            // traverse queue and build string with all items    
-            for(int i=0; i<QUEUE_SIZE; i++)
-                    {
-                     sItem = queue [i] + "--";   
-                     sQueue = sQueue + sItem; 
-                     //System.out.println("Count is: " + i);
-                     }
-            //System.out.println(sQueue);
-            msg = sQueue;  
-               }
     }
     
     public static HTMLlist readHtmlList (String filename) throws IOException {

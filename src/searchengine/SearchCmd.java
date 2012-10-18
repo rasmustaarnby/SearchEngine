@@ -7,7 +7,6 @@ package searchengine;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
@@ -18,8 +17,7 @@ import java.util.StringTokenizer;
 public class SearchCmd {
 
     public static String SearchOptions(String word, String datafile) throws IOException{
-        String wordSecond;
-        ArrayList urls = new ArrayList();
+        String wordSecond, urls;
         String[] args;
         args = new String[1];
         args[0] = datafile;
@@ -35,11 +33,8 @@ public class SearchCmd {
         // Ask for a single word to search
         BufferedReader inuser =
             new BufferedReader (new InputStreamReader (System.in));
-        //System.out.println ("Hit return to exit.");
         boolean quit = false;
         while (!quit) {
-            //System.out.print ("Search for: ");
-            //word = inuser.readLine(); // Read a line from the terminal
 
             // Advanced Task
             if(word.matches(".*\\band\\b.*")){
@@ -52,14 +47,13 @@ public class SearchCmd {
                         word = tokenAnd.nextToken(); // Go to the next singleWord and set it as word
                         if (Searcher.exists(file,word) && Searcher.exists(file,wordSecond)) { // can we maybe use a for loop or an arraylist to feed several words to look for? 
                             HTMLlist result = Searcher.updateURL(file, word);
-                            urls = Searcher.print(result);
-                            urls.toArray();
-                           // return "The combination " + wordSecond + " and " + word + " has been found, in the following urls:\n" + urls;
+                            urls = Searcher.compileString(result);
+                            return "The combination " + wordSecond + " and " + word + " has been found, in the following urls:\n" + urls;
                         } else {
-                          //  return "The combination " + wordSecond + " and " + word + " has NOT been found.";
+                            return "The combination " + wordSecond + " and " + word + " has NOT been found.";
                         }
                     }catch(NoSuchElementException e){
-                       // return "The searchengine only supports two words at the time."; // Is there a way to get the last unused singleWord and display it?
+                        return "The searchengine only supports two words at the time."; // Is there a way to get the last unused singleWord and display it?
                     }
                 }
             }else if(word.matches(".*\\bor\\b.*")){
@@ -69,11 +63,10 @@ public class SearchCmd {
                     String wordWithNoSpace = singleWord.replaceAll("\\s","");
                     if (Searcher.exists(file,wordWithNoSpace)) {
                         HTMLlist result = Searcher.updateURL(file, wordWithNoSpace);
-                        urls = Searcher.print(result);
-                        urls.toArray();
-                       // return "The word " + wordWithNoSpace + " has been found, in the following urls:\n" + urls;
+                        urls = Searcher.compileString(result);
+                        return "The word " + wordWithNoSpace + " has been found, in the following urls:\n" + urls;
                     } else {
-                       // return "The word " + wordWithNoSpace + " has NOT been found.";
+                        return "The word " + wordWithNoSpace + " has NOT been found.";
                     }
                 }
             }else{
@@ -81,20 +74,17 @@ public class SearchCmd {
                     quit = true;
                 } else if (Searcher.exists(file, word)) {
                     HTMLlist result = Searcher.updateURL(file, word);
-                    urls = Searcher.print(result);
-                    Searcher.toArray(urls);
+                    urls = Searcher.compileString(result);
                     return "The word " + word + " has been found, in the following urls:\n" + urls;
                 } else {
                     HTMLlist result = Searcher.contains(file, word);
-                    urls = Searcher.print(result); // might return a NullPointerException
-                    urls.toArray();
+                    urls = Searcher.compileString(result); // might return a NullPointerException
                     if(result != null){
-                       // return "The exact word " + word + " has NOT been found." + 
-                        //       "\nBut we found a word that was pretty close to, here are the urls\n" + urls;
+                       return "The exact word " + word + " has NOT been found." + 
+                              "\nBut we found a word that was pretty close to, here are the urls\n" + urls;
                     }else{
-                       // return "The exact word " + word + " has NOT been found.";
-                    }
-                        
+                       return "The exact word " + word + " has NOT been found.";
+                    }       
                 }
             }
         }
