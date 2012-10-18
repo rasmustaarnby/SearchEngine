@@ -162,8 +162,8 @@ public class SearcherUI extends javax.swing.JFrame {
         String word = jTextField1.getText();
         String datafile = jTextField2.getText();
         try {
-            SearchCmd.SearchOptions(word,datafile);
-            String result = "test";
+            String result = SearchCmd.SearchOptions(word,datafile);
+            
             jTextArea2.setText(result);
         } catch (IOException ex) {
             Logger.getLogger(SearcherUI.class.getName()).log(Level.SEVERE, null, ex);

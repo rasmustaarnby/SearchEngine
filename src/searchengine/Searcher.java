@@ -3,6 +3,7 @@ package searchengine;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  *
@@ -30,12 +31,15 @@ public class Searcher {
         return null;
     }
     
-    public static void print(HTMLlist file) {
+    public static ArrayList print(HTMLlist file) {
+        ArrayList returnUrlList = new ArrayList();
+        String returnUrl;
         UrlList url = file.urlLink; 
         while(url!= null){ 
-            System.out.println(url.url);
+            returnUrlList.add(url.url);
             url=url.UrlNext;
-        }   
+        }
+        return returnUrlList;
     }
     
     public static HTMLlist contains(HTMLlist url, String word){
@@ -46,6 +50,24 @@ public class Searcher {
             url = url.next;
         }
         return null;
+    }
+    
+    
+    public static void toArray(ArrayList list){
+        for(Object url: list){
+            System.out.println(url);
+        }
+            String sQueue = "";   
+            // traverse queue and build string with all items    
+            for(int i=0; i<QUEUE_SIZE; i++)
+                    {
+                     sItem = queue [i] + "--";   
+                     sQueue = sQueue + sItem; 
+                     //System.out.println("Count is: " + i);
+                     }
+            //System.out.println(sQueue);
+            msg = sQueue;  
+               }
     }
     
     public static HTMLlist readHtmlList (String filename) throws IOException {
