@@ -18,6 +18,7 @@ public class SearchCmd {
 
     public static String SearchOptions(String word, String datafile) throws IOException{
         String wordSecond, urls;
+        String msg = "";
         String[] args;
         args = new String[1];
         args[0] = datafile;
@@ -39,7 +40,7 @@ public class SearchCmd {
             // Advanced Task
             if(word.matches(".*\\band\\b.*")){
                 // String and = "\nYou're using AND\n";
-                StringTokenizer tokenAnd = new StringTokenizer(word, " and ");
+                StringTokenizer tokenAnd = new StringTokenizer(word, " and "); // introduce split() instead
                 while(tokenAnd.hasMoreTokens()){
                     try{
                         word = tokenAnd.nextToken(); // Go to first singleWord
@@ -48,27 +49,29 @@ public class SearchCmd {
                         if (Searcher.exists(file,word) && Searcher.exists(file,wordSecond)) { // can we maybe use a for loop or an arraylist to feed several words to look for? 
                             HTMLlist result = Searcher.updateURL(file, word);
                             urls = Searcher.compileString(result);
-                            return "The combination " + wordSecond + " and " + word + " has been found, in the following urls:\n" + urls;
+                            msg = msg + "The combination " + wordSecond + " and " + word + " has been found, in the following urls:\n" + urls + "\n";
                         } else {
-                            return "The combination " + wordSecond + " and " + word + " has NOT been found.";
+                            msg = msg + "The combination " + wordSecond + " and " + word + " has NOT been found.\n";
                         }
                     }catch(NoSuchElementException e){
                         return "The searchengine only supports two words at the time."; // Is there a way to get the last unused singleWord and display it?
                     }
                 }
+                return msg;
             }else if(word.matches(".*\\bor\\b.*")){
-                // String or = "\nYou're using OR\n";
+                String or = "\nYou're using OR\n";
                 String[] wordArray = word.split("or");
                 for(String singleWord: wordArray){
                     String wordWithNoSpace = singleWord.replaceAll("\\s","");
                     if (Searcher.exists(file,wordWithNoSpace)) {
                         HTMLlist result = Searcher.updateURL(file, wordWithNoSpace);
-                        urls = Searcher.compileString(result);
-                        return "The word " + wordWithNoSpace + " has been found, in the following urls:\n" + urls;
+                        urls = Searcher.compileString(result); 
+                        msg = msg + "The word " + wordWithNoSpace + " has been found, in the following urls:\n" + urls + "\n";
                     } else {
-                        return "The word " + wordWithNoSpace + " has NOT been found.";
+                        msg = msg + "The word " + wordWithNoSpace + " has NOT been found.\n";
                     }
                 }
+                return msg;
             }else{
                 if (word == null || word.length() == 0) {
                     quit = true;

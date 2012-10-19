@@ -78,7 +78,7 @@ public class SearcherUI extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("Søg:");
+        jLabel1.setText("Search:");
 
         jLabel2.setText("File:");
 

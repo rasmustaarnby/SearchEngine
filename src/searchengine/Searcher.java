@@ -45,11 +45,12 @@ public class Searcher {
     public static String compileString(HTMLlist file) {
         String urls = "";
         String msg;
-        
-        UrlList url = file.urlLink; 
-        while(url!= null){ 
-            urls = urls + url.url + "\n";
-            url=url.UrlNext;
+        if(file != null){
+            UrlList url = file.urlLink; 
+            while(url!= null){ 
+                urls = urls + url.url + "\n";
+                url=url.UrlNext;
+            }
         }
         msg = urls;
         return msg;
