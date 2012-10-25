@@ -3,7 +3,6 @@ package searchengine;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  *
@@ -29,17 +28,6 @@ public class Searcher {
             url = url.next;
         }
         return null;
-    }
-    
-    public static ArrayList print(HTMLlist file) {
-        ArrayList returnUrlList = new ArrayList();
-        String returnUrl;
-        UrlList url = file.urlLink; 
-        while(url!= null){ 
-            returnUrlList.add(url.url);
-            url=url.UrlNext;
-        }
-        return returnUrlList;
     }
     
     public static String compileString(HTMLlist file) {
